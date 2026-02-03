@@ -5,7 +5,17 @@ string title = "\\$3AD" + Icons::Kenney::UsersAlt + "\\$G Join a Friend";
 string friendLink;
 
 void Main() {
-    PermissionsOkay();
+    permissionsAreOkay = Permissions::PlayPublicClubRoom();
+    if (!permissionsAreOkay) {
+        const string msg = "Permissions::PlayPublicClubRoom (club access required)";
+        warn("Lacking: " + msg);
+        UI::ShowNotification(
+            Meta::ExecutingPlugin().Name + ": Permissions Error",
+            msg,
+            vec4(0.9f, 0.6f, 0.1f, 0.5f),
+            15000
+        );
+    }
 }
 
 void RenderMenu() {
@@ -67,30 +77,6 @@ void Render() {
     }
 
     UI::End();
-}
-
-// from RejoinLastServer plugin - https://github.com/XertroV/tm-rejoin-last-server
-void PermissionsOkay() {
-    bool allowed = Permissions::PlayPublicClubRoom();
-    if (!allowed) {
-        NotifyPermissionsError("Permissions::PlayPublicClubRoom (club access required)");
-        while (true) {
-            yield();
-        }
-    }
-
-    permissionsAreOkay = allowed;
-}
-
-// from RejoinLastServer plugin - https://github.com/XertroV/tm-rejoin-last-server
-void NotifyPermissionsError(const string&in issues) {
-    warn("Lacking permissions: " + issues);
-    UI::ShowNotification(
-        Meta::ExecutingPlugin().Name + ": Permissions Error",
-        "Lacking permission(s): " + issues,
-        vec4(0.9f, 0.6f, 0.1f, 0.5f),
-        15000
-    );
 }
 
 string GetServerLink() {
