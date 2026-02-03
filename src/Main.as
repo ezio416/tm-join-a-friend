@@ -33,7 +33,7 @@ void Render() {
             UI::Text("\\$D22You're not in a server!");
 
         UI::Text("\nMy friend's server link:");
-        friendLink = UI::InputText("##friendLink", friendLink, false);
+        friendLink = UI::InputText("##friendLink", friendLink);
         UI::BeginDisabled(friendLink == "" || !permissionsAreOkay);
             if (UI::Button(Icons::ArrowRight + " Join new server")) {
                 Meta::SaveSettings();
