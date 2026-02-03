@@ -31,7 +31,7 @@ void Render() {
 
     string currentLink = GetServerLink();
 
-    if (UI::Begin(title, S_Enabled, UI::WindowFlags::AlwaysAutoResize)) {
+    if (UI::Begin(title, S_Enabled, UI::GetDefaultWindowFlags() | UI::WindowFlags::AlwaysAutoResize)) {
         UI::Text("My server link:");
         if (currentLink.Length > 0) {
             if (UI::Selectable(currentLink, false)) {
