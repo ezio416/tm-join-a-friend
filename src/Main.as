@@ -94,19 +94,7 @@ void NotifyPermissionsError(const string&in issues) {
 }
 
 string GetServerLink() {
-    auto App = cast<CTrackMania>(GetApp());
-
-    auto Network = cast<CTrackManiaNetwork>(App.Network);
-    if (Network is null) {
-        return "";
-    }
-
-    auto ServerInfo = cast<CTrackManiaNetworkServerInfo>(Network.ServerInfo);
-    if (ServerInfo is null) {
-        return "";
-    }
-
-    return ServerInfo.JoinLink;
+    return cast<CTrackManiaNetworkServerInfo>(GetApp().Network.ServerInfo).JoinLink;
 }
 
 void HoverTooltip(const string&in msg) {
