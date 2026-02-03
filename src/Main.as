@@ -1,6 +1,3 @@
-// c 2023-12-20
-// m 2023-12-20
-
 bool permissionsAreOkay = false;
 string title = "\\$3AD" + Icons::Kenney::UsersAlt + "\\$G Join a Friend";
 
