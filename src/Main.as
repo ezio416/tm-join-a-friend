@@ -2,7 +2,7 @@ bool permissionsAreOkay = false;
 string title = "\\$3AD" + Icons::Kenney::UsersAlt + "\\$G Join a Friend";
 
 [Setting hidden]
-string friendLink = "";
+string friendLink;
 
 void Main() {
     PermissionsOkay();
@@ -33,7 +33,7 @@ void Render() {
 
     if (UI::Begin(title, S_Enabled, UI::WindowFlags::AlwaysAutoResize)) {
         UI::Text("My server link:");
-        if (currentLink != "") {
+        if (currentLink.Length > 0) {
             if (UI::Selectable(currentLink, false)) {
                 IO::SetClipboard(currentLink);
             }
@@ -45,17 +45,19 @@ void Render() {
         UI::Text("\nMy friend's server link:");
         friendLink = UI::InputText("##friendLink", friendLink);
         UI::BeginDisabled(false
-            or friendLink == ""
+            or friendLink.Length == 0
             or !permissionsAreOkay
         );
         if (UI::Button(Icons::ArrowRight + " Join new server")) {
             Meta::SaveSettings();
-            string jl = friendLink.Replace("#join", "#qjoin").Replace("#spectate", "#qspectate");
-            cast<CTrackMania>(GetApp()).ManiaPlanetScriptAPI.OpenLink(jl, CGameManiaPlanetScriptAPI::ELinkType::ManialinkBrowser);
+            cast<CTrackMania>(GetApp()).ManiaPlanetScriptAPI.OpenLink(
+                friendLink.Replace("#join", "#qjoin").Replace("#spectate", "#qspectate"),
+                CGameManiaPlanetScriptAPI::ELinkType::ManialinkBrowser
+            );
         }
         UI::EndDisabled();
 
-        UI::BeginDisabled(friendLink == "");
+        UI::BeginDisabled(friendLink.Length == 0);
         UI::SameLine();
         if (UI::Button(Icons::Times + " Clear")) {
             Meta::SaveSettings();
@@ -82,8 +84,13 @@ void PermissionsOkay() {
 
 // from RejoinLastServer plugin - https://github.com/XertroV/tm-rejoin-last-server
 void NotifyPermissionsError(const string&in issues) {
-    warn("Lacked permissions: " + issues);
-    UI::ShowNotification(Meta::ExecutingPlugin().Name + ": Permissions Error", "Lacking permission(s): " + issues, vec4(.9, .6, .1, .5), 15000);
+    warn("Lacking permissions: " + issues);
+    UI::ShowNotification(
+        Meta::ExecutingPlugin().Name + ": Permissions Error",
+        "Lacking permission(s): " + issues,
+        vec4(0.9f, 0.6f, 0.1f, 0.5f),
+        15000
+    );
 }
 
 string GetServerLink() {
